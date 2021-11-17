@@ -15,4 +15,11 @@ export class FeedService {
     createPost(feedPost: FeedPost):Observable<FeedPost> {
         return from(this.feedPostRepository.save(feedPost))
     }
+
+    // getPosts(): Promise<FeedPost[]> {
+    //     return this.feedPostRepository.find();
+    //   }
+    getAllPosts():Observable<FeedPost[]> {
+        return from(this.feedPostRepository.find())
+    }
 }

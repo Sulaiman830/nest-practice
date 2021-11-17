@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, Get } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { FeedService } from "./feed.service";
 import { FeedPost } from "./models/post.Interface";
@@ -11,5 +11,15 @@ export class FeedController {
         @Body()
         post:FeedPost): Observable<FeedPost> {
         return this.feedService.createPost(post)
+    }
+
+  //   @Get()
+  //   getPosts(): any {
+  //   return this.feedService.getPosts();
+  // }
+
+    @Get()
+    getAllPosts(): Observable<FeedPost[]> {
+      return this.feedService.getAllPosts()
     }
 }

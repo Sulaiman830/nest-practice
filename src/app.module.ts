@@ -5,6 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { FeedModule } from './feed/feed.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -13,13 +15,16 @@ import { FeedModule } from './feed/feed.module';
     ConfigModule.forRoot({isGlobal: true}),
     TypeOrmModule.forRoot({
       type:'postgres',
-      host:process.env.POSTGRES_HOST || "127.0.0.1", 
-      port:5432,
+      host:process.env.POSTGRES_HOST || "127.0.0.1",
+      port:parseInt(<string>process.env.POSTGRES_PORT) || 5432,
       username:process.env.POSTGRES_USER || "postgres",
       password:process.env.POSTGRES_PASSWORD || "password123",
       database:process.env.POSTGRES_DATABASE || "demoapisDB",
-      // synchronize:true
-   })
+      autoLoadEntities: true,
+      synchronize: true, // shouldn't be used in production - may lose data
+   }),
+    AuthModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],
