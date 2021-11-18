@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { from, Observable } from "rxjs";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Observable } from "rxjs";
 import { UpdateResult } from "typeorm";
 import { FeedService } from "./feed.service";
 import { FeedPost } from "./models/post.Interface";
@@ -14,9 +14,26 @@ export class FeedController {
         return this.feedService.createPost(post)
     }
 
+    // @Get()
+    // findAll(): Observable<FeedPost[]> {
+    //     return this.feedService.findAllPosts();
+    // }
+
+    @Get(':id')
+    getPost(
+        @Param('id') id:number
+    ): Observable<FeedPost> {
+        return this.feedService.getSinglePost(id)
+    }
+
+    // request with pagination
     @Get()
-    findAll(): Observable<FeedPost[]> {
-        return this.feedService.findAllPosts();
+    getSelected(
+        @Query('take') take: number = 1,
+        @Query('skip') skip: number = 1
+    ) : Observable<FeedPost[]> {
+        take = take > 20 ? 20 : take;
+        return this.feedService.getSelectedPosts(take, skip)
     }
 
     @Put(':id')

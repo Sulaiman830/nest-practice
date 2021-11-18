@@ -16,6 +16,18 @@ export class FeedService {
         return from(this.feedPostRepository.save(feedPost))
     }
 
+    getSinglePost(id: number): Observable<FeedPost> {
+        return from(this.feedPostRepository.findOne(id))
+    }
+
+    // pagination
+    getSelectedPosts(take:number = 10, skip: number = 0): Observable<FeedPost[]> {
+        return from (this.feedPostRepository.findAndCount({take, skip}).then(([posts]) => {
+            // console.log("posts", [...posts])
+            // or with from 
+            return <FeedPost[]> posts
+        }))
+    }
     findAllPosts(): Observable<FeedPost[]> {
         return from(this.feedPostRepository.find());
     }
