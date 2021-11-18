@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { Observable } from "rxjs";
+import { JwtGuard } from "src/auth/guards/jwt.guard";
 import { UpdateResult } from "typeorm";
 import { FeedService } from "./feed.service";
 import { FeedPost } from "./models/post.Interface";
@@ -7,6 +8,8 @@ import { FeedPost } from "./models/post.Interface";
 @Controller('feed')
 export class FeedController {
     constructor(private feedService: FeedService) { }
+
+    @UseGuards(JwtGuard)
     @Post()
     create(
         @Body()
