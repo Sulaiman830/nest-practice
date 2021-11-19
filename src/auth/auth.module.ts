@@ -1,6 +1,5 @@
-import { Controller, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
-import { UsersModule } from '../users/users.module';
 import { AuthController } from './controllers/auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './model/user.entity';
@@ -23,6 +22,7 @@ import { RolesGuard } from './guards/roles.guard';
     // UsersModule
   ],
   providers: [AuthService, JwtGuard, JwtStrategy, RolesGuard],
-  controllers: [AuthController]
+  controllers: [AuthController],
+  exports: [AuthService]
 })
 export class AuthModule {}

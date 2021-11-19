@@ -1,4 +1,3 @@
-import { RouterModule } from "@nestjs/core";
 import { FeedPostEntity } from "src/feed/models/post.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./role.enum";

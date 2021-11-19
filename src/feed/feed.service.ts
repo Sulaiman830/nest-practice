@@ -19,7 +19,7 @@ export class FeedService {
     }
 
     getSinglePost(id: number): Observable<FeedPost> {
-        return from(this.feedPostRepository.findOne(id))
+        return from(this.feedPostRepository.findOne({id}, {relations: ['author']}))
     }
 
     // pagination

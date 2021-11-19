@@ -14,19 +14,21 @@ export class AuthService {
         private readonly userRepository: Repository<UserEntity>,
         private jwtService: JwtService
     ) {}
+
     hashPassword(password: string): Observable<string> {
       return from(bcrypt.hash(password, 12))
     }
    
     registerUser(user:User): Observable<User> {
-        const {firstName, lastName, email, password} = user;
+        const {firstName, lastName, email, password, role} = user;
         return this.hashPassword(password).pipe(
             switchMap((hashedPassword: string) => {
-                return from(this.userRepository.save({
+                return from(this.userRepository.save({ 
                     firstName,
                     lastName,
                     email,
-                    password:hashedPassword
+                    password:hashedPassword,
+                    role
                 })).pipe(
                     map((user: User) => {
                         delete user.password;
@@ -61,6 +63,16 @@ export class AuthService {
                     // create JWT - credential
                     return from(this.jwtService.signAsync({user}));
                 }
+            })
+        )
+    }
+
+    findUserById(id: number): Observable<User> {
+        return from(this.userRepository.findOne({ id }, { relations: ['feedPosts'] })
+        ).pipe(
+            map((user: User) => {
+                delete user.password;
+                return user;
             })
         )
     }

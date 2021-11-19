@@ -3,16 +3,17 @@ import { Observable } from "rxjs";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { JwtGuard } from "../auth/guards/jwt.guard";
 import { Role } from "../auth/model/role.enum";
-import { UpdateResult } from "typeorm";
+import { DeleteResult, UpdateResult } from "typeorm";
 import { FeedService } from "./feed.service";
 import { FeedPost } from "./models/post.Interface";
 import { RolesGuard } from "src/auth/guards/roles.guard";
+import { IsCreatorGuard } from "./guards/is-creator.guard";
 
 @Controller('feed')
 export class FeedController {
     constructor(private feedService: FeedService) { }
 
-    @Roles(Role.ADMIN, Role.PREMIUM)
+    // @Roles(Role.ADMIN, Role.PREMIUM)
     @UseGuards(JwtGuard, RolesGuard)
     @Post()
     create(
@@ -43,6 +44,7 @@ export class FeedController {
         return this.feedService.getSelectedPosts(take, skip)
     }
 
+    @UseGuards(JwtGuard, IsCreatorGuard)
     @Put(':id')
     update(
         @Param('id') id: number,
@@ -51,10 +53,11 @@ export class FeedController {
         return this.feedService.updatePost(id, feedPost)
     }
 
+    @UseGuards(JwtGuard, IsCreatorGuard)
     @Delete(':id')
     delete(
         @Param('id') id: number
-    ) {
+    ): Observable<DeleteResult> {
         return this.feedService.deletePost(id)
     }
 }
