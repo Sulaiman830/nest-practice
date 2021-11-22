@@ -7,11 +7,8 @@ import { IsCreatorGuard } from './guards/is-creator.guard';
 import { FeedPostEntity } from './models/post.entity';
 
 @Module({
-    imports: [
-        AuthModule,
-        TypeOrmModule.forFeature([FeedPostEntity])
-    ],
-    controllers:[FeedController],
-    providers: [FeedService, IsCreatorGuard]
+  imports: [AuthModule, TypeOrmModule.forFeature([FeedPostEntity])],
+  controllers: [FeedController],
+  providers: [FeedService, IsCreatorGuard],
 })
 export class FeedModule {}

@@ -5,20 +5,16 @@ import { AuthService } from '../services/auth.service';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
-    @Post('register')
-    register(
-        @Body() user: User
-    ): Observable<User> {
-        return this.authService.registerUser(user)
-    }
+  constructor(private authService: AuthService) {}
+  @Post('register')
+  register(@Body() user: User): Observable<User> {
+    return this.authService.registerUser(user);
+  }
 
-    @Post('login')
-    login(
-        @Body() user: User
-    ): Observable<{token: string}> {
-        return this.authService.loginUser(user).pipe(
-            map((jwt: string) => ({token: jwt}))
-        )
-    }
+  @Post('login')
+  login(@Body() user: User): Observable<{ token: string }> {
+    return this.authService
+      .loginUser(user)
+      .pipe(map((jwt: string) => ({ token: jwt })));
+  }
 }
