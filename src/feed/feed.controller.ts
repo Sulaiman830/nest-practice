@@ -47,6 +47,7 @@ export class FeedController {
   }
 
   // request with pagination
+  // @UseGuards(JwtGuard) // added for nextjs-jwt-auth testing purpose
   @Get()
   getSelected(
     @Query('take') take = 1,

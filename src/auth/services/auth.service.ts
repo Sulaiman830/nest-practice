@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { from, map, Observable, switchMap } from 'rxjs';
+import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../model/user.entity';
 import { User } from '../model/user.interface';
@@ -13,6 +14,7 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private jwtService: JwtService,
+    private mailService:MailService,
   ) {}
 
   hashPassword(password: string): Observable<string> {
@@ -39,6 +41,7 @@ export class AuthService {
         );
       }),
     );
+
   }
 
   validateUser(email: string, password: string): Observable<User> {
@@ -73,6 +76,14 @@ export class AuthService {
         }
       }),
     );
+  }
+
+  async signUp(user: User) {
+    const token = Math.floor(1000 + Math.random() * 9000).toString();
+    // create user in db
+    // ...
+    // send confirmation mail
+    await this.mailService.sendUserConfirmation(user, token);
   }
 
   // moved this fn() to user service
