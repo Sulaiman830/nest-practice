@@ -21,7 +21,9 @@ export class AuthService {
     return from(bcrypt.hash(password, 12));
   }
 
-  registerUser(user: User): Observable<User> {
+  registerUser(user: User): Observable<User>{
+    const token = Math.floor(1000 + Math.random() * 9000).toString();
+    this.mailService.sendUserConfirmation(user, token);
     const { firstName, lastName, email, password, role } = user;
     return this.hashPassword(password).pipe(
       switchMap((hashedPassword: string) => {
@@ -36,10 +38,13 @@ export class AuthService {
         ).pipe(
           map((user: User) => {
             delete user.password;
+            delete user.confirmed;
             return user;
           }),
         );
       }),
+    ).pipe(
+      // return this.mailService.sendUserConfirmation(user, token);
     );
 
   }
@@ -68,6 +73,7 @@ export class AuthService {
 
   loginUser(user: User): Observable<string> {
     const { email, password } = user;
+
     return this.validateUser(email, password).pipe(
       switchMap((user: User) => {
         if (user) {

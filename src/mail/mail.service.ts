@@ -22,3 +22,13 @@ export class MailService {
     });
   }
 }
+
+//steps
+// first registeration
+// send email to the provided email
+// prevent user from loggin in without verification
+// by clicking the link sent to email address redirect to login page
+// coding steps
+// add confirmed field in db with default value false (type bool)
+// in login fn() check is confirmed or not
+// if not ==> please confirm your email address to login

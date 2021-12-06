@@ -6,6 +6,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   email?: string;
+  confirmed: boolean;
   password?: string;
   imagePath?: string;
   role?: Role;

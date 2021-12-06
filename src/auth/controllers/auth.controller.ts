@@ -6,15 +6,15 @@ import { AuthService } from '../services/auth.service';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-  // @Post('register')
-  // register(@Body() user: User): Observable<User> {
-  //   return this.authService.registerUser(user);
-  // }
-
   @Post('register')
-  register(@Body() user: User) {
-    this.authService.signUp(user)
+  register(@Body() user: User): Observable<User> {
+    return this.authService.registerUser(user);
   }
+
+  // @Post('register')
+  // register(@Body() user: User) {
+  //   this.authService.signUp(user)
+  // }
 
   @Post('login')
   login(@Body() user: User): Observable<{ token: string }> {
