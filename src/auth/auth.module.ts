@@ -10,6 +10,7 @@ import { RolesGuard } from './guards/roles.guard';
 import { UserService } from './services/user.service';
 import { UserController } from './controllers/user.controller';
 import { MailModule } from 'src/mail/mail.module';
+import { FriendRequestEntity } from './model/friend-request.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { MailModule } from 'src/mail/mail.module';
         signOptions: { expiresIn: '3600s' },
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, FriendRequestEntity]),
     MailModule
     // UsersModule
   ],
