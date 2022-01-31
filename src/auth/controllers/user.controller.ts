@@ -9,6 +9,8 @@ import {
   Req,
   Res,
   Param,
+  Put,
+  Body,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
@@ -20,7 +22,7 @@ import { UpdateResult } from 'typeorm';
 // import { Observable } from 'rxjs';
 import { JwtGuard } from '../guards/jwt.guard';
 import { isFileExtensionSafe, removeFile, saveImageToStorage } from '../helpers/image-storage';
-import { FriendRequest } from '../model/friend-request.interface';
+import { FriendRequest, FriendRequestStatus } from '../model/friend-request.interface';
 import { User } from '../model/user.interface';
 import { UserService } from '../services/user.service';
 
@@ -76,16 +78,40 @@ export class UserController {
   }
 
   @UseGuards(JwtGuard)
-  @Post('friend_request/send/:recieverId')
+  @Post('friend-request/send/:recieverId')
   sendFriendRequest(
     @Param('recieverId') recieverId: string,
     @Request() req
     )
-    : Observable<FriendRequest | {error:
+    : Observable<FriendRequest | {error: 
   string }> {
     // const recieverId = parseInt(recieverStringId);
     return this.userService.sendFriendRequest(+recieverId, req.user)
   }
+
+  @UseGuards(JwtGuard)
+  @Get('friend-request/status/:recieverId')
+  getFriendRequestStatus(@Param('recieverId') recieverId: string,  @Request() req): Observable<FriendRequestStatus> {
+    // const userId = parseInt(userStringId);
+    return this.userService.getFriendRequestStatus(+recieverId, req.user)
+  }
+
+  @UseGuards(JwtGuard)
+  @Put('friend-request/response/:friendRequestId')
+  respondToFriendRequest(@Param('friendRequestId') friendRequestId: string, 
+    @Body() statusResponse: FriendRequestStatus): Observable<FriendRequestStatus> {
+    // const userId = parseInt(userStringId);
+    return this.userService.respondToFriendRequest(statusResponse.status, +friendRequestId)
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('friend-request/me/recieved-requests')
+  getFriendRequestsFromRecipients(
+    @Request() req): Observable<FriendRequestStatus[]> {
+    // const userId = parseInt(userStringId);
+    return this.userService.getFriendRequestsFromRecipients(req.user)
+  }
+
 
 
   // @Get('get')

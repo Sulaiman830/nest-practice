@@ -12,7 +12,7 @@ export class FriendRequestEntity {
   creator: UserEntity;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.recievedFrientRequests)
-  reciever: UserEntity;
+  receiver: UserEntity;
 
   @Column()
   status: friend_request_status;
