@@ -1,4 +1,4 @@
-import { UserEntity } from 'src/auth/model/user.entity';
+import { UserEntity } from '../../auth/model/user.entity';
 import {
   Column,
   CreateDateColumn,

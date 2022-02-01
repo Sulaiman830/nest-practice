@@ -1,4 +1,4 @@
-import { FeedPost } from 'src/feed/models/post.Interface';
+import { FeedPost } from '../../feed/models/post.Interface';
 import { Role } from './role.enum';
 
 export interface User {
