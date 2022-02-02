@@ -6,7 +6,7 @@ import { from, map, Observable, switchMap } from 'rxjs';
 import { MailService } from '../../mail/mail.service';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../model/user.entity';
-import { User } from '../model/user.interface';
+import { User } from '../model/user.class';
 
 @Injectable()
 export class AuthService {
@@ -14,39 +14,40 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private jwtService: JwtService,
-    private mailService:MailService,
+    private mailService: MailService,
   ) {}
 
   hashPassword(password: string): Observable<string> {
     return from(bcrypt.hash(password, 12));
   }
 
-  registerUser(user: User): Observable<User>{
+  registerUser(user: User): Observable<User> {
     const token = Math.floor(1000 + Math.random() * 9000).toString();
     this.mailService.sendUserConfirmation(user, token);
     const { firstName, lastName, email, password, role } = user;
-    return this.hashPassword(password).pipe(
-      switchMap((hashedPassword: string) => {
-        return from(
-          this.userRepository.save({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            role,
-          }),
-        ).pipe(
-          map((user: User) => {
-            delete user.password;
-            delete user.confirmed;
-            return user;
-          }),
-        );
-      }),
-    ).pipe(
+    return this.hashPassword(password)
+      .pipe(
+        switchMap((hashedPassword: string) => {
+          return from(
+            this.userRepository.save({
+              firstName,
+              lastName,
+              email,
+              password: hashedPassword,
+              role,
+            }),
+          ).pipe(
+            map((user: User) => {
+              delete user.password;
+              delete user.confirmed;
+              return user;
+            }),
+          );
+        }),
+      )
+      .pipe
       // return this.mailService.sendUserConfirmation(user, token);
-    );
-
+      ();
   }
 
   validateUser(email: string, password: string): Observable<User> {

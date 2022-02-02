@@ -11,13 +11,13 @@ import {
   Request,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { Roles } from '../auth/decorators/roles.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtGuard } from '../auth/guards/jwt.guard';
-import { Role } from '../auth/model/role.enum';
+// import { Role } from '../auth/model/role.enum';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { FeedService } from './feed.service';
 import { FeedPost } from './models/post.Interface';
-import { RolesGuard } from '../auth/guards/roles.guard';
+// import { RolesGuard } from '../auth/guards/roles.guard';
 import { IsCreatorGuard } from './guards/is-creator.guard';
 
 @Controller('feed')
@@ -26,7 +26,7 @@ export class FeedController {
 
   // @Roles(Role.ADMIN, Role.PREMIUM)
   // @UseGuards(JwtGuard, RolesGuard)
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Post()
   create(
     @Body()
@@ -47,7 +47,7 @@ export class FeedController {
   }
 
   // request with pagination
-  // @UseGuards(JwtGuard) // added for nextjs-jwt-auth testing purpose
+  @UseGuards(JwtGuard) // added for nextjs-jwt-auth testing purpose
   @Get()
   getSelected(
     @Query('take') take = 1,
@@ -57,7 +57,7 @@ export class FeedController {
     return this.feedService.getSelectedPosts(take, skip);
   }
 
-  // @UseGuards(JwtGuard, IsCreatorGuard)
+  @UseGuards(JwtGuard, IsCreatorGuard)
   @Put(':id')
   update(
     @Param('id') id: number,
@@ -66,7 +66,7 @@ export class FeedController {
     return this.feedService.updatePost(id, feedPost);
   }
 
-  // @UseGuards(JwtGuard, IsCreatorGuard)
+  @UseGuards(JwtGuard, IsCreatorGuard)
   @Delete(':id')
   delete(@Param('id') id: number): Observable<DeleteResult> {
     return this.feedService.deletePost(id);

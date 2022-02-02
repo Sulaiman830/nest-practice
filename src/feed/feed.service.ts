@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { from, Observable } from 'rxjs';
-import { User } from '../auth/model/user.interface';
+import { User } from '../auth/model/user.class';
 import { Repository, UpdateResult } from 'typeorm';
 import { FeedPostEntity } from './models/post.entity';
 import { FeedPost } from './models/post.Interface';

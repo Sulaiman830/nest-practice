@@ -21,7 +21,7 @@ import { FriendRequestEntity } from './model/friend-request.entity';
       }),
     }),
     TypeOrmModule.forFeature([UserEntity, FriendRequestEntity]),
-    MailModule
+    MailModule,
     // UsersModule
   ],
   providers: [AuthService, JwtGuard, JwtStrategy, RolesGuard, UserService],

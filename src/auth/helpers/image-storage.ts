@@ -34,23 +34,34 @@ export const saveImageToStorage = {
   },
 };
 
-export const isFileExtensionSafe = (fullFilePath: string): Observable<boolean> => {
+export const isFileExtensionSafe = (
+  fullFilePath: string,
+): Observable<boolean> => {
   return from(FileType.fromFile(fullFilePath)).pipe(
-    switchMap((fileExtensionAndMimeType: {ext: validFileExtension, mime: validMimeType }) => {
-      if(!fileExtensionAndMimeType) return of(false);
+    switchMap(
+      (fileExtensionAndMimeType: {
+        ext: validFileExtension;
+        mime: validMimeType;
+      }) => {
+        if (!fileExtensionAndMimeType) return of(false);
 
-      const isFileTypeLegit = validFileExtensions.includes(fileExtensionAndMimeType.ext);
-      const isMimeTypeLegit = validMimeTypes.includes(fileExtensionAndMimeType.mime);
-      const isFileLegit = isFileTypeLegit && isMimeTypeLegit;
-      return of(isFileLegit);
-    })
-  )
-}
+        const isFileTypeLegit = validFileExtensions.includes(
+          fileExtensionAndMimeType.ext,
+        );
+        const isMimeTypeLegit = validMimeTypes.includes(
+          fileExtensionAndMimeType.mime,
+        );
+        const isFileLegit = isFileTypeLegit && isMimeTypeLegit;
+        return of(isFileLegit);
+      },
+    ),
+  );
+};
 
 export const removeFile = (fullFilePath: string): void => {
   try {
     fs.unlinkSync(fullFilePath);
-  } catch(err) {
-    console.error(err)
+  } catch (err) {
+    console.error(err);
   }
-}
+};

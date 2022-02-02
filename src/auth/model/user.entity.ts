@@ -17,8 +17,8 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({default: false})
-  confirmed:boolean
+  @Column({ default: false })
+  confirmed: boolean;
 
   @Column({ select: false })
   password: string;
@@ -32,9 +32,15 @@ export class UserEntity {
   @OneToMany(() => FeedPostEntity, (feedPostEntity) => feedPostEntity.author)
   feedPosts: FeedPostEntity[];
 
-  @OneToMany(() => FriendRequestEntity, (friendRequestEntity) => friendRequestEntity.creator)
+  @OneToMany(
+    () => FriendRequestEntity,
+    (friendRequestEntity) => friendRequestEntity.creator,
+  )
   sentFrientRequests: FriendRequestEntity[];
 
-  @OneToMany(() => FriendRequestEntity, (friendRequestEntity) => friendRequestEntity.receiver)
+  @OneToMany(
+    () => FriendRequestEntity,
+    (friendRequestEntity) => friendRequestEntity.receiver,
+  )
   recievedFrientRequests: FriendRequestEntity[];
 }

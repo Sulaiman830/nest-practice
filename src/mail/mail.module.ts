@@ -5,7 +5,6 @@ import { MailService } from './mail.service';
 import { join } from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-
 @Global()
 @Module({
   imports: [

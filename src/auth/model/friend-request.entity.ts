@@ -1,7 +1,12 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { friend_request_status } from './friend-request.interface';
 import { UserEntity } from './user.entity';
-
 
 @Entity('friend_requests')
 export class FriendRequestEntity {
@@ -11,7 +16,10 @@ export class FriendRequestEntity {
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.sentFrientRequests)
   creator: UserEntity;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.recievedFrientRequests)
+  @ManyToOne(
+    () => UserEntity,
+    (userEntity) => userEntity.recievedFrientRequests,
+  )
   receiver: UserEntity;
 
   @Column()
