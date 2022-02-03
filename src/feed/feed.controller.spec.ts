@@ -26,7 +26,25 @@ describe('FeedController', () => {
     author: mockRequest.user,
   };
 
-  const mockFeedService = {};
+  const mockFeedPosts: FeedPost[] = [
+    mockFeedPost,
+    {...mockFeedPost, body: "second feed post"},
+    {...mockFeedPost, body: "third feed post"}
+  ]
+
+  const mockFeedService = {
+    createPost: jest.fn().mockImplementation((user: User, feedPost: FeedPost) => {
+      return {
+        id: 1,
+        ...feedPost
+      }
+    }),
+    findPosts: jest.fn().mockImplementation(((take: number, skip: number) => {
+      const feedPostsAfterSkipping = mockFeedPosts.slice(skip);
+      const filteredFeedPosts = feedPostsAfterSkipping.slice(0, take);
+      return filteredFeedPosts;
+    }))
+  };
 
   const mockUserService = {};
 
@@ -59,7 +77,16 @@ describe('FeedController', () => {
     expect(FeedController).toBeDefined();
   });
 
-  it('shoule create ap feed post', () => {
-    // expect(feedController).
+  it('shoule create a feed post', () => {
+    expect(feedController.create(mockFeedPost, mockRequest)).toEqual(
+      {
+        id: expect.any(Number),
+        ...mockFeedPost
+      }
+    );
+  });
+
+  it('shoule create a get 2 feed posts skipping the first', () => {
+    expect(feedController.getSelected(2, 1)).toEqual(mockFeedPosts.slice(1));
   });
 });
