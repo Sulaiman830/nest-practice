@@ -10,6 +10,7 @@ import { FeedController } from './feed.controller';
 import { FeedService } from './feed.service';
 import { IsCreatorGuard } from './guards/is-creator.guard';
 import { FeedPost } from './models/post.Interface';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 describe('FeedController', () => {
   let feedController: FeedController;
@@ -30,7 +31,17 @@ describe('FeedController', () => {
     mockFeedPost,
     {...mockFeedPost, body: "second feed post"},
     {...mockFeedPost, body: "third feed post"}
-  ]
+  ];
+
+  const mockDeleteResult: DeleteResult = {
+    raw: [],
+    affected: 1
+  };
+
+  const mockUpdateResult: UpdateResult = {
+    ...mockDeleteResult,
+    generatedMaps: []
+  }
 
   const mockFeedService = {
     createPost: jest.fn().mockImplementation((user: User, feedPost: FeedPost) => {
@@ -39,11 +50,20 @@ describe('FeedController', () => {
         ...feedPost
       }
     }),
-    findPosts: jest.fn().mockImplementation(((take: number, skip: number) => {
+
+    getSelectedPosts: jest.fn().mockImplementation(((take: number, skip: number) => {
       const feedPostsAfterSkipping = mockFeedPosts.slice(skip);
       const filteredFeedPosts = feedPostsAfterSkipping.slice(0, take);
       return filteredFeedPosts;
-    }))
+    })),
+
+    updatePost: jest.fn().mockImplementation(() => {
+      return mockUpdateResult;
+    }),
+
+    deletePost: jest.fn().mockImplementation(() => {
+      return mockDeleteResult;
+    })
   };
 
   const mockUserService = {};
@@ -74,7 +94,7 @@ describe('FeedController', () => {
   });
 
   it('should be defined', () => {
-    expect(FeedController).toBeDefined();
+    expect(feedController).toBeDefined();
   });
 
   it('shoule create a feed post', () => {
@@ -88,5 +108,13 @@ describe('FeedController', () => {
 
   it('shoule create a get 2 feed posts skipping the first', () => {
     expect(feedController.getSelected(2, 1)).toEqual(mockFeedPosts.slice(1));
+  });
+
+  it('shoule update the feed post', () => {
+    expect(feedController.update(1, {...mockFeedPost, body: 'updated body'})).toEqual(mockUpdateResult);
+  });
+
+  it('shoule delete the feed post', () => {
+    expect(feedController.delete(1)).toEqual(mockDeleteResult);
   });
 });
